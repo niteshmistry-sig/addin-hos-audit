@@ -4,8 +4,8 @@
     "version": "1.0",
     "items": [
         {
-            "url": "https://niteshmistry-sig.github.io/addin-hos-audit/",
-            "path": "GettingStartedLink/",
+            "url": "https://niteshmistry-sig.github.io/addin-hos-audit/index.html",
+            "path": "ActivityLink/",
             "menuName": {
                 "en": "HOS Log Edit Audit"
             },
