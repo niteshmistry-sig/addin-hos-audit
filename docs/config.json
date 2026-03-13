@@ -9,7 +9,7 @@
             "menuName": {
                 "en": "HOS Log Edit Audit"
             },
-            "svgIcon": "https://niteshmistry-sig.github.io/addin-hos-audit/images/icon.svg"
+            "icon": "https://niteshmistry-sig.github.io/addin-hos-audit/images/icon.svg"
         }
     ],
     "isSigned": false
