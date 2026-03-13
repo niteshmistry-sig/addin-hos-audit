@@ -621,28 +621,45 @@ geotab.addin.hosLogEditAudit = function () {
         ];
 
         var mockLogs = [
+          // Active original records
           { id: "log1", state: 1, status: "D", dateTime: hoursAgo(48), driver: {id: "u1"}, origin: "Automatic" },
+          { id: "log3", state: 1, status: "ON", dateTime: hoursAgo(72), driver: {id: "u1"}, origin: "Automatic" },
+          { id: "log6", state: 1, status: "Off", dateTime: hoursAgo(30), driver: {id: "u2"}, origin: "Automatic" },
+          // Edits of existing logs (have parentId)
           { id: "log2", state: 2, status: "ON", dateTime: hoursAgo(48), editDateTime: hoursAgo(24),
             parentId: {id: "log1"}, driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
             annotations: [{comment: "Driver was at dock, not driving"}], origin: "Manual" },
-          { id: "log3", state: 1, status: "ON", dateTime: hoursAgo(72), driver: {id: "u1"}, origin: "Automatic" },
           { id: "log4", state: 3, status: "Off", dateTime: hoursAgo(72), editDateTime: hoursAgo(36),
             parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
             annotations: [{comment: "Was off duty, system logged incorrectly"}], origin: "Manual" },
           { id: "log5", state: 4, status: "SB", dateTime: hoursAgo(60), editDateTime: hoursAgo(12),
             parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
             annotations: [{comment: "No evidence of sleeper berth usage"}], origin: "Manual" },
-          { id: "log6", state: 1, status: "Off", dateTime: hoursAgo(30), driver: {id: "u2"}, origin: "Automatic" },
           { id: "log7", state: 2, status: "ON", dateTime: hoursAgo(30), editDateTime: hoursAgo(10),
             parentId: {id: "log6"}, driver: {id: "u2"}, editRequestedByUser: {id: "u5"},
             annotations: [{comment: "Pre-trip inspection"}, {comment: "Confirmed by dispatch"}], origin: "Manual" },
+          // Inserted new logs (no parentId = Add type)
           { id: "log8", state: 2, status: "D", dateTime: hoursAgo(20), editDateTime: hoursAgo(5),
             driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
-            annotations: [], origin: "Manual" }
+            annotations: [{comment: "Added missing driving segment"}], origin: "Manual" },
+          { id: "log9", state: 2, status: "SB", dateTime: hoursAgo(40), editDateTime: hoursAgo(8),
+            driver: {id: "u1"},
+            annotations: [{comment: "Sleeper berth not recorded by ELD"}], origin: "Manual" },
+          { id: "log10", state: 3, status: "Off", dateTime: hoursAgo(18), editDateTime: hoursAgo(3),
+            driver: {id: "u2"},
+            annotations: [{comment: "Driver requested off-duty addition"}], origin: "Manual" }
+        ];
+
+        // Mock audit records — covers "Add HOS log" entries where editRequestedByUser may be missing
+        var mockAudits = [
+          { name: "Add HOS log", userName: "admin", dateTime: hoursAgo(8), comment: "Added SB for u1" },
+          { name: "Add HOS log", userName: "jdoe", dateTime: hoursAgo(3), comment: "Added Off for u2" },
+          { name: "Edit HOS log", userName: "admin", dateTime: hoursAgo(24), comment: "Edited log for u1" },
+          { name: "Edit HOS log", userName: "jsmith", dateTime: hoursAgo(36), comment: "Edited log for u1" }
         ];
 
         var mockApi = {
-          multiCall: function (calls, success, failure) {
+          multiCall: function (calls, success) {
             var results = calls.map(function (call) {
               var typeName = call[1].typeName;
               var search = call[1].search || {};
@@ -654,6 +671,9 @@ geotab.addin.hosLogEditAudit = function () {
                   var driverId = search.userSearch ? search.userSearch.id : null;
                   if (driverId) return mockLogs.filter(function (l) { return l.driver && l.driver.id === driverId; });
                   return mockLogs;
+                case "Audit":
+                  var auditName = search.name || "";
+                  return mockAudits.filter(function (a) { return a.name === auditName; });
                 default:
                   return [];
               }
