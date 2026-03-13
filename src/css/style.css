@@ -1,0 +1,511 @@
+/*
+ * style.css — HOS Log Edit Audit
+ * All selectors scoped under #hlaContainer for MyGeotab CSS isolation.
+ */
+
+/* -- Design Tokens ------------------------------------------------ */
+
+:root {
+    --hla-color-primary: #1976d2;
+    --hla-color-primary-light: #e3f2fd;
+    --hla-color-success: #2e7d32;
+    --hla-color-success-light: #e8f5e9;
+    --hla-color-warning: #ed6c02;
+    --hla-color-warning-light: #fff3e0;
+    --hla-color-error: #d32f2f;
+    --hla-color-error-light: #ffebee;
+    --hla-color-info: #0288d1;
+    --hla-color-info-light: #e1f5fe;
+    --hla-color-text: #212121;
+    --hla-color-text-secondary: #616161;
+    --hla-color-text-hint: #9e9e9e;
+    --hla-color-border: #e0e0e0;
+    --hla-color-bg: #f5f5f5;
+    --hla-color-surface: #ffffff;
+    --hla-radius: 8px;
+    --hla-radius-sm: 4px;
+    --hla-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+    --hla-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --hla-space-xs: 4px;
+    --hla-space-sm: 8px;
+    --hla-space-md: 16px;
+    --hla-space-lg: 24px;
+    --hla-space-xl: 32px;
+}
+
+/* -- Base --------------------------------------------------------- */
+
+#hlaContainer {
+    font-family: var(--hla-font) !important;
+    color: var(--hla-color-text) !important;
+    background: var(--hla-color-bg) !important;
+    padding: var(--hla-space-lg) !important;
+    min-height: 100% !important;
+    position: relative !important;
+    line-height: 1.5 !important;
+    font-size: 14px !important;
+}
+
+#hlaContainer#hlaContainer *, #hlaContainer#hlaContainer *::before, #hlaContainer#hlaContainer *::after {
+    box-sizing: border-box !important;
+}
+
+#hlaContainer#hlaContainer h1 {
+    font-family: var(--hla-font) !important;
+    color: var(--hla-color-text) !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+}
+
+#hlaContainer#hlaContainer table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#hlaContainer#hlaContainer th,
+#hlaContainer#hlaContainer td {
+    text-align: left !important;
+    vertical-align: middle !important;
+}
+
+/* -- Header ------------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: var(--hla-space-lg) !important;
+}
+
+#hlaContainer#hlaContainer .hla-header__title {
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    color: var(--hla-color-text) !important;
+}
+
+/* -- Buttons ------------------------------------------------------ */
+
+#hlaContainer#hlaContainer .hla-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: var(--hla-space-xs) !important;
+    padding: var(--hla-space-sm) var(--hla-space-md) !important;
+    font-family: var(--hla-font) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border: 1px solid var(--hla-color-border) !important;
+    border-radius: var(--hla-radius-sm) !important;
+    background: var(--hla-color-surface) !important;
+    color: var(--hla-color-text) !important;
+    cursor: pointer !important;
+    transition: background 0.15s, border-color 0.15s !important;
+    text-decoration: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    box-shadow: none !important;
+    min-width: auto !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+#hlaContainer#hlaContainer .hla-btn:hover {
+    background: var(--hla-color-bg) !important;
+    border-color: var(--hla-color-text-hint) !important;
+}
+
+#hlaContainer#hlaContainer .hla-btn--primary {
+    background: var(--hla-color-primary) !important;
+    color: #fff !important;
+    border-color: var(--hla-color-primary) !important;
+}
+
+#hlaContainer#hlaContainer .hla-btn--primary:hover {
+    background: #1565c0 !important;
+}
+
+#hlaContainer#hlaContainer .hla-btn--primary:disabled {
+    background: var(--hla-color-text-hint) !important;
+    border-color: var(--hla-color-text-hint) !important;
+    cursor: not-allowed !important;
+}
+
+#hlaContainer#hlaContainer .hla-btn--small {
+    padding: var(--hla-space-xs) var(--hla-space-sm) !important;
+    font-size: 12px !important;
+}
+
+/* -- Filter Bar --------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-filters {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: var(--hla-space-md) !important;
+    flex-wrap: wrap !important;
+    background: var(--hla-color-surface) !important;
+    padding: var(--hla-space-md) !important;
+    border: 1px solid var(--hla-color-border) !important;
+    border-radius: var(--hla-radius) !important;
+    box-shadow: var(--hla-shadow) !important;
+    margin-bottom: var(--hla-space-lg) !important;
+}
+
+#hlaContainer#hlaContainer .hla-filter-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--hla-space-xs) !important;
+}
+
+#hlaContainer#hlaContainer .hla-filter-label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--hla-color-text-secondary) !important;
+}
+
+#hlaContainer#hlaContainer .hla-filter-group--action {
+    justify-content: flex-end !important;
+}
+
+#hlaContainer#hlaContainer .hla-select {
+    padding: var(--hla-space-sm) !important;
+    font-family: var(--hla-font) !important;
+    font-size: 13px !important;
+    border: 1px solid var(--hla-color-border) !important;
+    border-radius: var(--hla-radius-sm) !important;
+    background: var(--hla-color-surface) !important;
+    color: var(--hla-color-text) !important;
+    min-width: 240px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23616161'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 8px center !important;
+    padding-right: 28px !important;
+}
+
+#hlaContainer#hlaContainer .hla-select:focus {
+    border-color: var(--hla-color-primary) !important;
+}
+
+#hlaContainer#hlaContainer .hla-date-input {
+    padding: var(--hla-space-sm) !important;
+    font-family: var(--hla-font) !important;
+    font-size: 13px !important;
+    border: 1px solid var(--hla-color-border) !important;
+    border-radius: var(--hla-radius-sm) !important;
+    background: var(--hla-color-surface) !important;
+    color: var(--hla-color-text) !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+#hlaContainer#hlaContainer .hla-date-input:focus {
+    border-color: var(--hla-color-primary) !important;
+}
+
+#hlaContainer#hlaContainer .hla-date-error {
+    color: var(--hla-color-error) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    width: 100% !important;
+    margin-top: var(--hla-space-xs) !important;
+}
+
+/* -- Results Header ----------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-results-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: var(--hla-space-md) !important;
+}
+
+#hlaContainer#hlaContainer .hla-result-count {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--hla-color-text) !important;
+}
+
+/* -- Loading ------------------------------------------------------ */
+
+#hlaContainer#hlaContainer .hla-loading {
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--hla-space-sm) !important;
+    padding: var(--hla-space-xl) 0 !important;
+    color: var(--hla-color-text-secondary) !important;
+    font-size: 14px !important;
+}
+
+#hlaContainer#hlaContainer .hla-loading[style*="display: flex"],
+#hlaContainer#hlaContainer .hla-loading[style*="display:flex"] {
+    display: flex !important;
+}
+
+#hlaContainer#hlaContainer .hla-spinner {
+    width: 20px !important;
+    height: 20px !important;
+    border: 2px solid var(--hla-color-border) !important;
+    border-top-color: var(--hla-color-primary) !important;
+    border-radius: 50% !important;
+    animation: hla-spin 0.7s linear infinite !important;
+}
+
+@keyframes hla-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* -- Error -------------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-error {
+    background: var(--hla-color-error-light) !important;
+    color: var(--hla-color-error) !important;
+    padding: var(--hla-space-md) !important;
+    border-radius: var(--hla-radius) !important;
+    border: 1px solid var(--hla-color-error) !important;
+    font-size: 13px !important;
+    margin-bottom: var(--hla-space-md) !important;
+}
+
+/* -- Table -------------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-table-wrap {
+    overflow-x: auto !important;
+}
+
+#hlaContainer#hlaContainer .hla-table-wrap[style*="display: block"],
+#hlaContainer#hlaContainer .hla-table-wrap[style*="display:block"] {
+    display: block !important;
+}
+
+#hlaContainer#hlaContainer .hla-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: var(--hla-color-surface) !important;
+    border-radius: var(--hla-radius) !important;
+    overflow: hidden !important;
+    box-shadow: var(--hla-shadow) !important;
+    table-layout: auto !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__th {
+    text-align: left !important;
+    padding: var(--hla-space-sm) var(--hla-space-md) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--hla-color-text-secondary) !important;
+    background: var(--hla-color-bg) !important;
+    border-bottom: 2px solid var(--hla-color-border) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    white-space: nowrap !important;
+    height: auto !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__th:hover {
+    color: var(--hla-color-text) !important;
+}
+
+#hlaContainer#hlaContainer .hla-sort-icon::after {
+    content: "\2195" !important;
+    margin-left: 4px !important;
+    font-size: 10px !important;
+    opacity: 0.4 !important;
+}
+
+#hlaContainer#hlaContainer .hla-sort--asc .hla-sort-icon::after {
+    content: "\2191" !important;
+    opacity: 1 !important;
+}
+
+#hlaContainer#hlaContainer .hla-sort--desc .hla-sort-icon::after {
+    content: "\2193" !important;
+    opacity: 1 !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__row {
+    transition: background 0.1s !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__row:hover {
+    background: var(--hla-color-primary-light) !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__cell {
+    padding: var(--hla-space-sm) var(--hla-space-md) !important;
+    font-size: 13px !important;
+    border-bottom: 1px solid var(--hla-color-border) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    white-space: nowrap !important;
+    background: none !important;
+    height: auto !important;
+}
+
+#hlaContainer#hlaContainer .hla-table__cell--annotations {
+    white-space: normal !important;
+    max-width: 250px !important;
+    word-wrap: break-word !important;
+}
+
+#hlaContainer#hlaContainer .hla-empty {
+    text-align: center !important;
+    padding: var(--hla-space-xl) !important;
+    color: var(--hla-color-text-hint) !important;
+    font-style: italic !important;
+}
+
+/* -- Badges ------------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-badge {
+    display: inline-block !important;
+    padding: 2px 10px !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1.6 !important;
+    border: none !important;
+    box-shadow: none !important;
+    white-space: nowrap !important;
+}
+
+/* Duty status badges */
+#hlaContainer#hlaContainer .hla-badge--off {
+    background: #e8f5e9 !important;
+    color: #2e7d32 !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--on {
+    background: #fff3e0 !important;
+    color: #e65100 !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--driving {
+    background: #ffebee !important;
+    color: #c62828 !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--sleeper {
+    background: #e1f5fe !important;
+    color: #01579b !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--pc {
+    background: #f3e5f5 !important;
+    color: #6a1b9a !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--ym {
+    background: #e0f2f1 !important;
+    color: #00695c !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--default {
+    background: var(--hla-color-bg) !important;
+    color: var(--hla-color-text-secondary) !important;
+}
+
+/* Record state badges */
+#hlaContainer#hlaContainer .hla-badge--changed {
+    background: #fff3e0 !important;
+    color: #e65100 !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--requested {
+    background: #e3f2fd !important;
+    color: #1565c0 !important;
+}
+
+#hlaContainer#hlaContainer .hla-badge--rejected {
+    background: #ffebee !important;
+    color: #c62828 !important;
+}
+
+/* -- Empty State -------------------------------------------------- */
+
+#hlaContainer#hlaContainer .hla-empty-state {
+    text-align: center !important;
+    padding: var(--hla-space-xl) var(--hla-space-lg) !important;
+    color: var(--hla-color-text-hint) !important;
+    font-size: 14px !important;
+    font-style: italic !important;
+    background: var(--hla-color-surface) !important;
+    border: 1px solid var(--hla-color-border) !important;
+    border-radius: var(--hla-radius) !important;
+    box-shadow: var(--hla-shadow) !important;
+}
+
+/* -- Print Styles ------------------------------------------------- */
+
+@media print {
+    body > *:not(#hlaContainer) {
+        display: none !important;
+    }
+    #hlaContainer {
+        padding: 0 !important;
+        background: white !important;
+    }
+    #hlaContainer#hlaContainer .hla-header,
+    #hlaContainer#hlaContainer .hla-filters,
+    #hlaContainer#hlaContainer .hla-results-header,
+    #hlaContainer#hlaContainer .hla-empty-state {
+        display: none !important;
+    }
+    #hlaContainer#hlaContainer .hla-table-wrap {
+        display: block !important;
+    }
+    #hlaContainer#hlaContainer .hla-table {
+        box-shadow: none !important;
+    }
+}
+
+/* -- Responsive --------------------------------------------------- */
+
+@media (max-width: 900px) {
+    #hlaContainer#hlaContainer .hla-filters {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    #hlaContainer#hlaContainer .hla-select {
+        min-width: 100% !important;
+    }
+    #hlaContainer#hlaContainer .hla-results-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: var(--hla-space-sm) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #hlaContainer {
+        padding: var(--hla-space-md) !important;
+    }
+    #hlaContainer#hlaContainer .hla-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: var(--hla-space-sm) !important;
+    }
+}

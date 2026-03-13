@@ -1,0 +1,16 @@
+{
+    "name": "HOS Log Edit Audit",
+    "supportEmail": "support@example.com",
+    "version": "1.0",
+    "items": [
+        {
+            "url": "https://niteshmistry-sig.github.io/addin-hos-audit/index.html",
+            "path": "ComplianceLink/",
+            "menuName": {
+                "en": "HOS Log Edit Audit"
+            },
+            "svgIcon": "https://niteshmistry-sig.github.io/addin-hos-audit/images/icon.svg"
+        }
+    ],
+    "isSigned": false
+}

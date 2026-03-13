@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOS Log Edit Audit</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="hlaContainer">
+
+        <!-- Loading overlay -->
+        <div id="hlaLoading" class="hla-loading" style="display:none;">
+            <div class="hla-spinner"></div>
+            <span>Loading&#8230;</span>
+        </div>
+
+        <!-- Error banner -->
+        <div id="hlaError" class="hla-error" style="display:none;"></div>
+
+        <!-- Header -->
+        <div class="hla-header">
+            <h1 class="hla-header__title">HOS Log Edit Audit</h1>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="hla-filters">
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaDriverSelect">Driver</label>
+                <select id="hlaDriverSelect" class="hla-select">
+                    <option value="">-- Select Driver --</option>
+                </select>
+            </div>
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaFromDate">From</label>
+                <input type="date" id="hlaFromDate" class="hla-date-input">
+            </div>
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaToDate">To</label>
+                <input type="date" id="hlaToDate" class="hla-date-input">
+            </div>
+            <div class="hla-filter-group hla-filter-group--action">
+                <button id="hlaSearchBtn" class="hla-btn hla-btn--primary" disabled>Search</button>
+            </div>
+            <span id="hlaDateError" class="hla-date-error" style="display:none;">Date range must be 7 days or less</span>
+        </div>
+
+        <!-- Results header -->
+        <div class="hla-results-header" style="display:none;" id="hlaResultsHeader">
+            <span id="hlaResultCount" class="hla-result-count">0 edits found</span>
+            <button id="hlaCsvBtn" class="hla-btn hla-btn--small" title="Export CSV">&#x2B07; Export CSV</button>
+        </div>
+
+        <!-- Results table -->
+        <div class="hla-table-wrap" style="display:none;">
+            <table class="hla-table">
+                <thead>
+                    <tr>
+                        <th class="hla-table__th" data-sort="punchDateTime">Punch Date/Time <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="driverName">Driver <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="editDateTime">Edit Date/Time <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="editedByName">Edited By <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="originalStatus">Original Status <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="newStatus">New Status <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="recordState">Record State <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th">Annotations</th>
+                        <th class="hla-table__th" data-sort="origin">Origin <span class="hla-sort-icon"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="hlaTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Empty state prompt -->
+        <div id="hlaEmptyState" class="hla-empty-state">
+            Select a driver and date range, then click Search to view HOS log edits.
+        </div>
+    </div>
+
+    <!-- Scripts (order matters) -->
+    <script src="js/constants.js"></script>
+    <script src="js/auditService.js"></script>
+    <script src="js/dataProcessor.js"></script>
+    <script src="js/auditTable.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

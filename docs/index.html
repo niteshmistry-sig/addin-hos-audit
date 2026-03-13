@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOS Log Edit Audit</title>
+    <script>
+(function(){
+  var s=document.createElement("style");
+  s.setAttribute("data-hla","true");
+  s.textContent="/*\n * style.css \u2014 HOS Log Edit Audit\n * All selectors scoped under #hlaContainer for MyGeotab CSS isolation.\n */\n\n/* -- Design Tokens ------------------------------------------------ */\n\n:root {\n    --hla-color-primary: #1976d2;\n    --hla-color-primary-light: #e3f2fd;\n    --hla-color-success: #2e7d32;\n    --hla-color-success-light: #e8f5e9;\n    --hla-color-warning: #ed6c02;\n    --hla-color-warning-light: #fff3e0;\n    --hla-color-error: #d32f2f;\n    --hla-color-error-light: #ffebee;\n    --hla-color-info: #0288d1;\n    --hla-color-info-light: #e1f5fe;\n    --hla-color-text: #212121;\n    --hla-color-text-secondary: #616161;\n    --hla-color-text-hint: #9e9e9e;\n    --hla-color-border: #e0e0e0;\n    --hla-color-bg: #f5f5f5;\n    --hla-color-surface: #ffffff;\n    --hla-radius: 8px;\n    --hla-radius-sm: 4px;\n    --hla-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);\n    --hla-font: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;\n    --hla-space-xs: 4px;\n    --hla-space-sm: 8px;\n    --hla-space-md: 16px;\n    --hla-space-lg: 24px;\n    --hla-space-xl: 32px;\n}\n\n/* -- Base --------------------------------------------------------- */\n\n#hlaContainer {\n    font-family: var(--hla-font) !important;\n    color: var(--hla-color-text) !important;\n    background: var(--hla-color-bg) !important;\n    padding: var(--hla-space-lg) !important;\n    min-height: 100% !important;\n    position: relative !important;\n    line-height: 1.5 !important;\n    font-size: 14px !important;\n}\n\n#hlaContainer#hlaContainer *, #hlaContainer#hlaContainer *::before, #hlaContainer#hlaContainer *::after {\n    box-sizing: border-box !important;\n}\n\n#hlaContainer#hlaContainer h1 {\n    font-family: var(--hla-font) !important;\n    color: var(--hla-color-text) !important;\n    line-height: 1.3 !important;\n    margin: 0 !important;\n    padding: 0 !important;\n    border: none !important;\n    background: none !important;\n}\n\n#hlaContainer#hlaContainer table {\n    border-collapse: collapse !important;\n    border-spacing: 0 !important;\n    margin: 0 !important;\n    padding: 0 !important;\n}\n\n#hlaContainer#hlaContainer th,\n#hlaContainer#hlaContainer td {\n    text-align: left !important;\n    vertical-align: middle !important;\n}\n\n/* -- Header ------------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-header {\n    display: flex !important;\n    align-items: center !important;\n    justify-content: space-between !important;\n    margin-bottom: var(--hla-space-lg) !important;\n}\n\n#hlaContainer#hlaContainer .hla-header__title {\n    font-size: 22px !important;\n    font-weight: 600 !important;\n    margin: 0 !important;\n    color: var(--hla-color-text) !important;\n}\n\n/* -- Buttons ------------------------------------------------------ */\n\n#hlaContainer#hlaContainer .hla-btn {\n    display: inline-flex !important;\n    align-items: center !important;\n    gap: var(--hla-space-xs) !important;\n    padding: var(--hla-space-sm) var(--hla-space-md) !important;\n    font-family: var(--hla-font) !important;\n    font-size: 13px !important;\n    font-weight: 500 !important;\n    border: 1px solid var(--hla-color-border) !important;\n    border-radius: var(--hla-radius-sm) !important;\n    background: var(--hla-color-surface) !important;\n    color: var(--hla-color-text) !important;\n    cursor: pointer !important;\n    transition: background 0.15s, border-color 0.15s !important;\n    text-decoration: none !important;\n    text-transform: none !important;\n    letter-spacing: normal !important;\n    box-shadow: none !important;\n    min-width: auto !important;\n    height: auto !important;\n    line-height: 1.4 !important;\n    -webkit-appearance: none !important;\n    -moz-appearance: none !important;\n    appearance: none !important;\n}\n\n#hlaContainer#hlaContainer .hla-btn:hover {\n    background: var(--hla-color-bg) !important;\n    border-color: var(--hla-color-text-hint) !important;\n}\n\n#hlaContainer#hlaContainer .hla-btn--primary {\n    background: var(--hla-color-primary) !important;\n    color: #fff !important;\n    border-color: var(--hla-color-primary) !important;\n}\n\n#hlaContainer#hlaContainer .hla-btn--primary:hover {\n    background: #1565c0 !important;\n}\n\n#hlaContainer#hlaContainer .hla-btn--primary:disabled {\n    background: var(--hla-color-text-hint) !important;\n    border-color: var(--hla-color-text-hint) !important;\n    cursor: not-allowed !important;\n}\n\n#hlaContainer#hlaContainer .hla-btn--small {\n    padding: var(--hla-space-xs) var(--hla-space-sm) !important;\n    font-size: 12px !important;\n}\n\n/* -- Filter Bar --------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-filters {\n    display: flex !important;\n    align-items: flex-end !important;\n    gap: var(--hla-space-md) !important;\n    flex-wrap: wrap !important;\n    background: var(--hla-color-surface) !important;\n    padding: var(--hla-space-md) !important;\n    border: 1px solid var(--hla-color-border) !important;\n    border-radius: var(--hla-radius) !important;\n    box-shadow: var(--hla-shadow) !important;\n    margin-bottom: var(--hla-space-lg) !important;\n}\n\n#hlaContainer#hlaContainer .hla-filter-group {\n    display: flex !important;\n    flex-direction: column !important;\n    gap: var(--hla-space-xs) !important;\n}\n\n#hlaContainer#hlaContainer .hla-filter-label {\n    font-size: 11px !important;\n    font-weight: 600 !important;\n    text-transform: uppercase !important;\n    letter-spacing: 0.5px !important;\n    color: var(--hla-color-text-secondary) !important;\n}\n\n#hlaContainer#hlaContainer .hla-filter-group--action {\n    justify-content: flex-end !important;\n}\n\n#hlaContainer#hlaContainer .hla-select {\n    padding: var(--hla-space-sm) !important;\n    font-family: var(--hla-font) !important;\n    font-size: 13px !important;\n    border: 1px solid var(--hla-color-border) !important;\n    border-radius: var(--hla-radius-sm) !important;\n    background: var(--hla-color-surface) !important;\n    color: var(--hla-color-text) !important;\n    min-width: 240px !important;\n    height: auto !important;\n    line-height: 1.4 !important;\n    outline: none !important;\n    -webkit-appearance: none !important;\n    appearance: none !important;\n    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23616161'/%3E%3C/svg%3E\") !important;\n    background-repeat: no-repeat !important;\n    background-position: right 8px center !important;\n    padding-right: 28px !important;\n}\n\n#hlaContainer#hlaContainer .hla-select:focus {\n    border-color: var(--hla-color-primary) !important;\n}\n\n#hlaContainer#hlaContainer .hla-date-input {\n    padding: var(--hla-space-sm) !important;\n    font-family: var(--hla-font) !important;\n    font-size: 13px !important;\n    border: 1px solid var(--hla-color-border) !important;\n    border-radius: var(--hla-radius-sm) !important;\n    background: var(--hla-color-surface) !important;\n    color: var(--hla-color-text) !important;\n    height: auto !important;\n    line-height: 1.4 !important;\n    outline: none !important;\n    -webkit-appearance: none !important;\n    appearance: none !important;\n}\n\n#hlaContainer#hlaContainer .hla-date-input:focus {\n    border-color: var(--hla-color-primary) !important;\n}\n\n#hlaContainer#hlaContainer .hla-date-error {\n    color: var(--hla-color-error) !important;\n    font-size: 12px !important;\n    font-weight: 500 !important;\n    width: 100% !important;\n    margin-top: var(--hla-space-xs) !important;\n}\n\n/* -- Results Header ----------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-results-header {\n    display: flex !important;\n    align-items: center !important;\n    justify-content: space-between !important;\n    margin-bottom: var(--hla-space-md) !important;\n}\n\n#hlaContainer#hlaContainer .hla-result-count {\n    font-size: 15px !important;\n    font-weight: 600 !important;\n    color: var(--hla-color-text) !important;\n}\n\n/* -- Loading ------------------------------------------------------ */\n\n#hlaContainer#hlaContainer .hla-loading {\n    align-items: center !important;\n    justify-content: center !important;\n    gap: var(--hla-space-sm) !important;\n    padding: var(--hla-space-xl) 0 !important;\n    color: var(--hla-color-text-secondary) !important;\n    font-size: 14px !important;\n}\n\n#hlaContainer#hlaContainer .hla-loading[style*=\"display: flex\"],\n#hlaContainer#hlaContainer .hla-loading[style*=\"display:flex\"] {\n    display: flex !important;\n}\n\n#hlaContainer#hlaContainer .hla-spinner {\n    width: 20px !important;\n    height: 20px !important;\n    border: 2px solid var(--hla-color-border) !important;\n    border-top-color: var(--hla-color-primary) !important;\n    border-radius: 50% !important;\n    animation: hla-spin 0.7s linear infinite !important;\n}\n\n@keyframes hla-spin {\n    to { transform: rotate(360deg); }\n}\n\n/* -- Error -------------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-error {\n    background: var(--hla-color-error-light) !important;\n    color: var(--hla-color-error) !important;\n    padding: var(--hla-space-md) !important;\n    border-radius: var(--hla-radius) !important;\n    border: 1px solid var(--hla-color-error) !important;\n    font-size: 13px !important;\n    margin-bottom: var(--hla-space-md) !important;\n}\n\n/* -- Table -------------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-table-wrap {\n    overflow-x: auto !important;\n}\n\n#hlaContainer#hlaContainer .hla-table-wrap[style*=\"display: block\"],\n#hlaContainer#hlaContainer .hla-table-wrap[style*=\"display:block\"] {\n    display: block !important;\n}\n\n#hlaContainer#hlaContainer .hla-table {\n    width: 100% !important;\n    border-collapse: collapse !important;\n    background: var(--hla-color-surface) !important;\n    border-radius: var(--hla-radius) !important;\n    overflow: hidden !important;\n    box-shadow: var(--hla-shadow) !important;\n    table-layout: auto !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__th {\n    text-align: left !important;\n    padding: var(--hla-space-sm) var(--hla-space-md) !important;\n    font-size: 11px !important;\n    font-weight: 600 !important;\n    text-transform: uppercase !important;\n    letter-spacing: 0.5px !important;\n    color: var(--hla-color-text-secondary) !important;\n    background: var(--hla-color-bg) !important;\n    border-bottom: 2px solid var(--hla-color-border) !important;\n    border-top: none !important;\n    border-left: none !important;\n    border-right: none !important;\n    cursor: pointer !important;\n    user-select: none !important;\n    white-space: nowrap !important;\n    height: auto !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__th:hover {\n    color: var(--hla-color-text) !important;\n}\n\n#hlaContainer#hlaContainer .hla-sort-icon::after {\n    content: \"\\2195\" !important;\n    margin-left: 4px !important;\n    font-size: 10px !important;\n    opacity: 0.4 !important;\n}\n\n#hlaContainer#hlaContainer .hla-sort--asc .hla-sort-icon::after {\n    content: \"\\2191\" !important;\n    opacity: 1 !important;\n}\n\n#hlaContainer#hlaContainer .hla-sort--desc .hla-sort-icon::after {\n    content: \"\\2193\" !important;\n    opacity: 1 !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__row {\n    transition: background 0.1s !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__row:hover {\n    background: var(--hla-color-primary-light) !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__cell {\n    padding: var(--hla-space-sm) var(--hla-space-md) !important;\n    font-size: 13px !important;\n    border-bottom: 1px solid var(--hla-color-border) !important;\n    border-top: none !important;\n    border-left: none !important;\n    border-right: none !important;\n    white-space: nowrap !important;\n    background: none !important;\n    height: auto !important;\n}\n\n#hlaContainer#hlaContainer .hla-table__cell--annotations {\n    white-space: normal !important;\n    max-width: 250px !important;\n    word-wrap: break-word !important;\n}\n\n#hlaContainer#hlaContainer .hla-empty {\n    text-align: center !important;\n    padding: var(--hla-space-xl) !important;\n    color: var(--hla-color-text-hint) !important;\n    font-style: italic !important;\n}\n\n/* -- Badges ------------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-badge {\n    display: inline-block !important;\n    padding: 2px 10px !important;\n    border-radius: 12px !important;\n    font-size: 11px !important;\n    font-weight: 600 !important;\n    letter-spacing: 0.3px !important;\n    line-height: 1.6 !important;\n    border: none !important;\n    box-shadow: none !important;\n    white-space: nowrap !important;\n}\n\n/* Duty status badges */\n#hlaContainer#hlaContainer .hla-badge--off {\n    background: #e8f5e9 !important;\n    color: #2e7d32 !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--on {\n    background: #fff3e0 !important;\n    color: #e65100 !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--driving {\n    background: #ffebee !important;\n    color: #c62828 !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--sleeper {\n    background: #e1f5fe !important;\n    color: #01579b !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--pc {\n    background: #f3e5f5 !important;\n    color: #6a1b9a !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--ym {\n    background: #e0f2f1 !important;\n    color: #00695c !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--default {\n    background: var(--hla-color-bg) !important;\n    color: var(--hla-color-text-secondary) !important;\n}\n\n/* Record state badges */\n#hlaContainer#hlaContainer .hla-badge--changed {\n    background: #fff3e0 !important;\n    color: #e65100 !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--requested {\n    background: #e3f2fd !important;\n    color: #1565c0 !important;\n}\n\n#hlaContainer#hlaContainer .hla-badge--rejected {\n    background: #ffebee !important;\n    color: #c62828 !important;\n}\n\n/* -- Empty State -------------------------------------------------- */\n\n#hlaContainer#hlaContainer .hla-empty-state {\n    text-align: center !important;\n    padding: var(--hla-space-xl) var(--hla-space-lg) !important;\n    color: var(--hla-color-text-hint) !important;\n    font-size: 14px !important;\n    font-style: italic !important;\n    background: var(--hla-color-surface) !important;\n    border: 1px solid var(--hla-color-border) !important;\n    border-radius: var(--hla-radius) !important;\n    box-shadow: var(--hla-shadow) !important;\n}\n\n/* -- Print Styles ------------------------------------------------- */\n\n@media print {\n    body > *:not(#hlaContainer) {\n        display: none !important;\n    }\n    #hlaContainer {\n        padding: 0 !important;\n        background: white !important;\n    }\n    #hlaContainer#hlaContainer .hla-header,\n    #hlaContainer#hlaContainer .hla-filters,\n    #hlaContainer#hlaContainer .hla-results-header,\n    #hlaContainer#hlaContainer .hla-empty-state {\n        display: none !important;\n    }\n    #hlaContainer#hlaContainer .hla-table-wrap {\n        display: block !important;\n    }\n    #hlaContainer#hlaContainer .hla-table {\n        box-shadow: none !important;\n    }\n}\n\n/* -- Responsive --------------------------------------------------- */\n\n@media (max-width: 900px) {\n    #hlaContainer#hlaContainer .hla-filters {\n        flex-direction: column !important;\n        align-items: stretch !important;\n    }\n    #hlaContainer#hlaContainer .hla-select {\n        min-width: 100% !important;\n    }\n    #hlaContainer#hlaContainer .hla-results-header {\n        flex-direction: column !important;\n        align-items: flex-start !important;\n        gap: var(--hla-space-sm) !important;\n    }\n}\n\n@media (max-width: 600px) {\n    #hlaContainer {\n        padding: var(--hla-space-md) !important;\n    }\n    #hlaContainer#hlaContainer .hla-header {\n        flex-direction: column !important;\n        align-items: flex-start !important;\n        gap: var(--hla-space-sm) !important;\n    }\n}\n";
+  (document.head||document.documentElement).appendChild(s);
+})();
+</script>
+</head>
+<body>
+    <div id="hlaContainer">
+
+        <!-- Loading overlay -->
+        <div id="hlaLoading" class="hla-loading" style="display:none;">
+            <div class="hla-spinner"></div>
+            <span>Loading&#8230;</span>
+        </div>
+
+        <!-- Error banner -->
+        <div id="hlaError" class="hla-error" style="display:none;"></div>
+
+        <!-- Header -->
+        <div class="hla-header">
+            <h1 class="hla-header__title">HOS Log Edit Audit</h1>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="hla-filters">
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaDriverSelect">Driver</label>
+                <select id="hlaDriverSelect" class="hla-select">
+                    <option value="">-- Select Driver --</option>
+                </select>
+            </div>
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaFromDate">From</label>
+                <input type="date" id="hlaFromDate" class="hla-date-input">
+            </div>
+            <div class="hla-filter-group">
+                <label class="hla-filter-label" for="hlaToDate">To</label>
+                <input type="date" id="hlaToDate" class="hla-date-input">
+            </div>
+            <div class="hla-filter-group hla-filter-group--action">
+                <button id="hlaSearchBtn" class="hla-btn hla-btn--primary" disabled>Search</button>
+            </div>
+            <span id="hlaDateError" class="hla-date-error" style="display:none;">Date range must be 7 days or less</span>
+        </div>
+
+        <!-- Results header -->
+        <div class="hla-results-header" style="display:none;" id="hlaResultsHeader">
+            <span id="hlaResultCount" class="hla-result-count">0 edits found</span>
+            <button id="hlaCsvBtn" class="hla-btn hla-btn--small" title="Export CSV">&#x2B07; Export CSV</button>
+        </div>
+
+        <!-- Results table -->
+        <div class="hla-table-wrap" style="display:none;">
+            <table class="hla-table">
+                <thead>
+                    <tr>
+                        <th class="hla-table__th" data-sort="punchDateTime">Punch Date/Time <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="driverName">Driver <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="editDateTime">Edit Date/Time <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="editedByName">Edited By <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="originalStatus">Original Status <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="newStatus">New Status <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th" data-sort="recordState">Record State <span class="hla-sort-icon"></span></th>
+                        <th class="hla-table__th">Annotations</th>
+                        <th class="hla-table__th" data-sort="origin">Origin <span class="hla-sort-icon"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="hlaTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Empty state prompt -->
+        <div id="hlaEmptyState" class="hla-empty-state">
+            Select a driver and date range, then click Search to view HOS log edits.
+        </div>
+    </div>
+
+    <!-- Scripts (order matters) -->
+    <script>
+/**
+ * constants.js — HOS Log Edit Audit constants and configuration.
+ */
+var HLA = HLA || {};
+
+HLA.Constants = (function () {
+    "use strict";
+
+    var EventRecordStatus = {
+        ACTIVE: 1,
+        INACTIVE_CHANGED: 2,
+        CHANGE_REQUESTED: 3,
+        CHANGE_REJECTED: 4
+    };
+
+    var EventRecordStatusLabels = {};
+    EventRecordStatusLabels[EventRecordStatus.ACTIVE] = "Active";
+    EventRecordStatusLabels[EventRecordStatus.INACTIVE_CHANGED] = "Inactive (Changed)";
+    EventRecordStatusLabels[EventRecordStatus.CHANGE_REQUESTED] = "Change Requested";
+    EventRecordStatusLabels[EventRecordStatus.CHANGE_REJECTED] = "Change Rejected";
+
+    var DutyStatusLabels = {
+        "Off": "Off Duty",
+        "ON": "On Duty",
+        "SB": "Sleeper Berth",
+        "D": "Driving",
+        "OffDuty": "Off Duty",
+        "SleeperBerth": "Sleeper Berth",
+        "Driving": "Driving",
+        "OnDuty": "On Duty",
+        "PC": "Personal Conveyance",
+        "YM": "Yard Move"
+    };
+
+    var MAX_DATE_RANGE_DAYS = 7;
+
+    var ALL_STATUSES = [
+        EventRecordStatus.ACTIVE,
+        EventRecordStatus.INACTIVE_CHANGED,
+        EventRecordStatus.CHANGE_REQUESTED,
+        EventRecordStatus.CHANGE_REJECTED
+    ];
+
+    return {
+        EventRecordStatus: EventRecordStatus,
+        EventRecordStatusLabels: EventRecordStatusLabels,
+        DutyStatusLabels: DutyStatusLabels,
+        MAX_DATE_RANGE_DAYS: MAX_DATE_RANGE_DAYS,
+        ALL_STATUSES: ALL_STATUSES
+    };
+})();
+
+</script>
+    <script>
+/**
+ * auditService.js — API layer for loading drivers and fetching DutyStatusLog data.
+ */
+var HLA = HLA || {};
+
+HLA.AuditService = (function () {
+    "use strict";
+
+    /**
+     * Load all drivers (users with isDriver flag).
+     * @param {Object} api - MyGeotab API object
+     * @returns {Promise<Object[]>} Array of user objects
+     */
+    function loadDrivers(api) {
+        return new Promise(function (resolve, reject) {
+            api.multiCall([
+                ["Get", {
+                    typeName: "User",
+                    search: { isDriver: true },
+                    resultsLimit: 50000
+                }]
+            ], function (results) {
+                resolve(results[0]);
+            }, function (err) {
+                reject(err);
+            });
+        });
+    }
+
+    /**
+     * Fetch audit data: DutyStatusLogs with modifications + all users for name resolution.
+     * @param {Object} api - MyGeotab API object
+     * @param {string} driverId - User ID of the driver
+     * @param {string} fromDate - ISO date string
+     * @param {string} toDate - ISO date string
+     * @returns {Promise<{logs: Object[], users: Object[]}>}
+     */
+    function fetchAuditData(api, driverId, fromDate, toDate) {
+        return new Promise(function (resolve, reject) {
+            api.multiCall([
+                ["Get", {
+                    typeName: "DutyStatusLog",
+                    search: {
+                        userSearch: { id: driverId },
+                        fromDate: fromDate,
+                        toDate: toDate,
+                        statuses: HLA.Constants.ALL_STATUSES,
+                        includeModifications: true
+                    },
+                    resultsLimit: 25000
+                }],
+                ["Get", {
+                    typeName: "User",
+                    resultsLimit: 50000
+                }]
+            ], function (results) {
+                resolve({
+                    logs: results[0],
+                    users: results[1]
+                });
+            }, function (err) {
+                reject(err);
+            });
+        });
+    }
+
+    return {
+        loadDrivers: loadDrivers,
+        fetchAuditData: fetchAuditData
+    };
+})();
+
+</script>
+    <script>
+/**
+ * dataProcessor.js — Resolves edit chains via ParentId and builds display rows.
+ */
+var HLA = HLA || {};
+
+HLA.DataProcessor = (function () {
+    "use strict";
+
+    var C = HLA.Constants;
+
+    /**
+     * Format a DutyStatusLog status value to a human-readable label.
+     */
+    function formatStatus(status) {
+        if (!status) { return "\u2014"; }
+        return C.DutyStatusLabels[status] || status;
+    }
+
+    /**
+     * Build audit rows from raw DutyStatusLog entries.
+     * Only logs with state 2 (Inactive/Changed), 3 (Change Requested),
+     * or 4 (Change Rejected) represent edits.
+     *
+     * @param {Object[]} logs - Raw DutyStatusLog entries
+     * @param {Object} userMap - Map of userId -> user object
+     * @returns {Object[]} Sorted array of display rows
+     */
+    function buildAuditRows(logs, userMap) {
+        // Index all logs by ID
+        var logById = {};
+        var i, log;
+        for (i = 0; i < logs.length; i++) {
+            log = logs[i];
+            if (log.id) {
+                logById[log.id] = log;
+            }
+        }
+
+        var rows = [];
+        for (i = 0; i < logs.length; i++) {
+            log = logs[i];
+
+            // Only include edit records (state 2, 3, or 4)
+            if (log.state !== C.EventRecordStatus.INACTIVE_CHANGED &&
+                log.state !== C.EventRecordStatus.CHANGE_REQUESTED &&
+                log.state !== C.EventRecordStatus.CHANGE_REJECTED) {
+                continue;
+            }
+
+            // Resolve original status from parent
+            var originalStatus = "\u2014";
+            if (log.parentId && log.parentId.id && logById[log.parentId.id]) {
+                originalStatus = formatStatus(logById[log.parentId.id].status);
+            }
+
+            // Resolve who made the edit — show full name + username
+            var editedByName = "System";
+            var editedByUsername = "";
+            if (log.editRequestedByUser && log.editRequestedByUser.id) {
+                var editor = userMap[log.editRequestedByUser.id];
+                if (editor) {
+                    var fullName = ((editor.firstName || "") + " " + (editor.lastName || "")).trim();
+                    editedByUsername = editor.name || "";
+                    if (fullName && editedByUsername) {
+                        editedByName = fullName + " (" + editedByUsername + ")";
+                    } else {
+                        editedByName = fullName || editedByUsername || "Unknown";
+                    }
+                }
+            }
+
+            // Resolve annotations
+            var annotations = "\u2014";
+            if (log.annotations && log.annotations.length > 0) {
+                var comments = [];
+                for (var j = 0; j < log.annotations.length; j++) {
+                    if (log.annotations[j].comment) {
+                        comments.push(log.annotations[j].comment);
+                    }
+                }
+                if (comments.length > 0) {
+                    annotations = comments.join("; ");
+                }
+            }
+
+            // Resolve driver name
+            var driverName = "\u2014";
+            if (log.driver && log.driver.id) {
+                var driver = userMap[log.driver.id];
+                if (driver) {
+                    driverName = (driver.firstName || "") + " " + (driver.lastName || "");
+                    driverName = driverName.trim() || driver.name || "Unknown";
+                }
+            }
+
+            rows.push({
+                punchDateTime: log.dateTime || "",
+                driverName: driverName,
+                editDateTime: log.editDateTime || log.dateTime || "",
+                editedByName: editedByName,
+                originalStatus: originalStatus,
+                newStatus: formatStatus(log.status),
+                recordState: C.EventRecordStatusLabels[log.state] || "Unknown",
+                recordStateCode: log.state,
+                annotations: annotations,
+                origin: log.origin || "\u2014",
+                rawStatus: log.status
+            });
+        }
+
+        // Sort by editDateTime descending
+        rows.sort(function (a, b) {
+            if (a.editDateTime > b.editDateTime) return -1;
+            if (a.editDateTime < b.editDateTime) return 1;
+            return 0;
+        });
+
+        return rows;
+    }
+
+    /**
+     * Build a userMap (id -> user) from an array of user objects.
+     */
+    function buildUserMap(users) {
+        var map = {};
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].id) {
+                map[users[i].id] = users[i];
+            }
+        }
+        return map;
+    }
+
+    return {
+        buildAuditRows: buildAuditRows,
+        buildUserMap: buildUserMap,
+        formatStatus: formatStatus
+    };
+})();
+
+</script>
+    <script>
+/**
+ * auditTable.js — Table rendering, sorting, and CSV export.
+ */
+var HLA = HLA || {};
+
+HLA.AuditTable = (function () {
+    "use strict";
+
+    var C = HLA.Constants;
+    var _rows = [];
+    var _sortCol = "editDateTime";
+    var _sortAsc = false;
+
+    /**
+     * XSS-safe text escaping via DOM createTextNode.
+     */
+    function escHtml(str) {
+        var div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    /**
+     * Format an ISO datetime string for display.
+     */
+    function formatDateTime(isoStr) {
+        if (!isoStr) { return "\u2014"; }
+        try {
+            var d = new Date(isoStr);
+            if (isNaN(d.getTime())) { return isoStr; }
+            return d.toLocaleString();
+        } catch (e) {
+            return isoStr;
+        }
+    }
+
+    /**
+     * Get CSS class for a duty status badge.
+     */
+    function dutyBadgeClass(statusText) {
+        var lower = (statusText || "").toLowerCase();
+        if (lower.indexOf("off") > -1) return "hla-badge--off";
+        if (lower.indexOf("sleeper") > -1) return "hla-badge--sleeper";
+        if (lower.indexOf("driving") > -1) return "hla-badge--driving";
+        if (lower.indexOf("on duty") > -1 || lower.indexOf("on") === 0) return "hla-badge--on";
+        if (lower.indexOf("personal") > -1) return "hla-badge--pc";
+        if (lower.indexOf("yard") > -1) return "hla-badge--ym";
+        return "hla-badge--default";
+    }
+
+    /**
+     * Get CSS class for a record state badge.
+     */
+    function stateBadgeClass(stateCode) {
+        switch (stateCode) {
+            case C.EventRecordStatus.INACTIVE_CHANGED: return "hla-badge--changed";
+            case C.EventRecordStatus.CHANGE_REQUESTED: return "hla-badge--requested";
+            case C.EventRecordStatus.CHANGE_REJECTED: return "hla-badge--rejected";
+            default: return "hla-badge--default";
+        }
+    }
+
+    /**
+     * Sort the current rows by a column key.
+     */
+    function sortRows(colKey) {
+        if (_sortCol === colKey) {
+            _sortAsc = !_sortAsc;
+        } else {
+            _sortCol = colKey;
+            _sortAsc = true;
+        }
+
+        _rows.sort(function (a, b) {
+            var va = a[colKey] || "";
+            var vb = b[colKey] || "";
+            if (typeof va === "string") { va = va.toLowerCase(); }
+            if (typeof vb === "string") { vb = vb.toLowerCase(); }
+            if (va < vb) return _sortAsc ? -1 : 1;
+            if (va > vb) return _sortAsc ? 1 : -1;
+            return 0;
+        });
+    }
+
+    /**
+     * Render the audit rows into the table body.
+     */
+    function render(rows) {
+        _rows = rows;
+        var tbody = document.getElementById("hlaTableBody");
+        if (!tbody) { return; }
+
+        var countEl = document.getElementById("hlaResultCount");
+        if (countEl) {
+            countEl.textContent = rows.length + " edit" + (rows.length !== 1 ? "s" : "") + " found";
+        }
+
+        if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="hla-empty">No HOS log edits found for this driver and date range.</td></tr>';
+            return;
+        }
+
+        var html = "";
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            html += '<tr class="hla-table__row">';
+            html += '<td class="hla-table__cell">' + escHtml(formatDateTime(r.punchDateTime)) + '</td>';
+            html += '<td class="hla-table__cell">' + escHtml(r.driverName) + '</td>';
+            html += '<td class="hla-table__cell">' + escHtml(formatDateTime(r.editDateTime)) + '</td>';
+            html += '<td class="hla-table__cell">' + escHtml(r.editedByName) + '</td>';
+            html += '<td class="hla-table__cell"><span class="hla-badge ' + dutyBadgeClass(r.originalStatus) + '">' + escHtml(r.originalStatus) + '</span></td>';
+            html += '<td class="hla-table__cell"><span class="hla-badge ' + dutyBadgeClass(r.newStatus) + '">' + escHtml(r.newStatus) + '</span></td>';
+            html += '<td class="hla-table__cell"><span class="hla-badge ' + stateBadgeClass(r.recordStateCode) + '">' + escHtml(r.recordState) + '</span></td>';
+            html += '<td class="hla-table__cell hla-table__cell--annotations">' + escHtml(r.annotations) + '</td>';
+            html += '<td class="hla-table__cell">' + escHtml(r.origin) + '</td>';
+            html += '</tr>';
+        }
+        tbody.innerHTML = html;
+    }
+
+    /**
+     * Bind sort click handlers to table headers.
+     */
+    function bindSort() {
+        var headers = document.querySelectorAll("#hlaContainer .hla-table__th[data-sort]");
+        for (var i = 0; i < headers.length; i++) {
+            (function (th) {
+                th.addEventListener("click", function () {
+                    var col = th.getAttribute("data-sort");
+                    sortRows(col);
+                    render(_rows);
+                    updateSortIndicators(col);
+                });
+            })(headers[i]);
+        }
+    }
+
+    /**
+     * Update sort direction indicators on table headers.
+     */
+    function updateSortIndicators(activeCol) {
+        var headers = document.querySelectorAll("#hlaContainer .hla-table__th[data-sort]");
+        for (var i = 0; i < headers.length; i++) {
+            var th = headers[i];
+            th.classList.remove("hla-sort--asc", "hla-sort--desc");
+            if (th.getAttribute("data-sort") === activeCol) {
+                th.classList.add(_sortAsc ? "hla-sort--asc" : "hla-sort--desc");
+            }
+        }
+    }
+
+    /**
+     * Export current rows as CSV via Blob download.
+     */
+    function exportCSV() {
+        if (_rows.length === 0) { return; }
+
+        var headers = ["Punch Date/Time", "Driver", "Edit Date/Time", "Edited By",
+                       "Original Status", "New Status", "Record State", "Annotations", "Origin"];
+
+        var csvRows = [headers.join(",")];
+        for (var i = 0; i < _rows.length; i++) {
+            var r = _rows[i];
+            var row = [
+                '"' + formatDateTime(r.punchDateTime).replace(/"/g, '""') + '"',
+                '"' + (r.driverName || "").replace(/"/g, '""') + '"',
+                '"' + formatDateTime(r.editDateTime).replace(/"/g, '""') + '"',
+                '"' + (r.editedByName || "").replace(/"/g, '""') + '"',
+                '"' + (r.originalStatus || "").replace(/"/g, '""') + '"',
+                '"' + (r.newStatus || "").replace(/"/g, '""') + '"',
+                '"' + (r.recordState || "").replace(/"/g, '""') + '"',
+                '"' + (r.annotations || "").replace(/"/g, '""') + '"',
+                '"' + (r.origin || "").replace(/"/g, '""') + '"'
+            ];
+            csvRows.push(row.join(","));
+        }
+
+        var csvContent = csvRows.join("\n");
+        var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "hos_log_edit_audit_" + new Date().toISOString().slice(0, 10) + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    return {
+        render: render,
+        bindSort: bindSort,
+        exportCSV: exportCSV
+    };
+})();
+
+</script>
+    <script>
+/**
+ * main.js — MyGeotab add-in lifecycle host for HOS Log Edit Audit.
+ * Coordinates initialization, filter UI, search, and data flow.
+ * In standalone mode (no geotab global), uses mock data for UI preview.
+ */
+var HLA = HLA || {};
+
+// Provide geotab stub when running standalone (preview mode)
+if (typeof geotab === "undefined") {
+    var geotab = { addin: {} };
+}
+
+geotab.addin.hos_log_edit_audit = function () {
+    "use strict";
+
+    var C = HLA.Constants;
+    var _api, _page;
+    var _driverMap = {}; // id -> user
+
+    // -- Loading / Error states ------------------------------------
+
+    function showLoading(message) {
+        var el = document.getElementById("hlaLoading");
+        if (el) {
+            var span = el.querySelector("span");
+            if (span) { span.textContent = message || "Loading\u2026"; }
+            el.style.display = "flex";
+        }
+        var err = document.getElementById("hlaError");
+        if (err) { err.style.display = "none"; }
+    }
+
+    function hideLoading() {
+        var el = document.getElementById("hlaLoading");
+        if (el) { el.style.display = "none"; }
+    }
+
+    function showError(message) {
+        hideLoading();
+        var el = document.getElementById("hlaError");
+        if (el) {
+            el.textContent = message;
+            el.style.display = "block";
+        }
+    }
+
+    // -- Date helpers ----------------------------------------------
+
+    function toLocalISODate(date) {
+        var y = date.getFullYear();
+        var m = String(date.getMonth() + 1).padStart(2, "0");
+        var d = String(date.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + d;
+    }
+
+    function setDefaultDates() {
+        var today = new Date();
+        var sixDaysAgo = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000);
+
+        var fromInput = document.getElementById("hlaFromDate");
+        var toInput = document.getElementById("hlaToDate");
+        if (fromInput) { fromInput.value = toLocalISODate(sixDaysAgo); }
+        if (toInput) { toInput.value = toLocalISODate(today); }
+    }
+
+    function validateDateRange() {
+        var fromInput = document.getElementById("hlaFromDate");
+        var toInput = document.getElementById("hlaToDate");
+        var errorEl = document.getElementById("hlaDateError");
+        var searchBtn = document.getElementById("hlaSearchBtn");
+        var driverSelect = document.getElementById("hlaDriverSelect");
+
+        if (!fromInput || !toInput) { return false; }
+
+        var from = fromInput.value;
+        var to = toInput.value;
+
+        // Check driver is selected
+        var driverSelected = driverSelect && driverSelect.value !== "";
+
+        if (!from || !to) {
+            if (errorEl) { errorEl.style.display = "none"; }
+            if (searchBtn) { searchBtn.disabled = true; }
+            return false;
+        }
+
+        var fromDate = new Date(from + "T00:00:00");
+        var toDate = new Date(to + "T00:00:00");
+        var diffMs = toDate.getTime() - fromDate.getTime();
+        var diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+        if (diffDays < 0) {
+            if (errorEl) {
+                errorEl.textContent = "\"From\" date must be before \"To\" date";
+                errorEl.style.display = "inline";
+            }
+            if (searchBtn) { searchBtn.disabled = true; }
+            return false;
+        }
+
+        if (diffDays > C.MAX_DATE_RANGE_DAYS) {
+            if (errorEl) {
+                errorEl.textContent = "Date range must be " + C.MAX_DATE_RANGE_DAYS + " days or less";
+                errorEl.style.display = "inline";
+            }
+            if (searchBtn) { searchBtn.disabled = true; }
+            return false;
+        }
+
+        if (errorEl) { errorEl.style.display = "none"; }
+        if (searchBtn) { searchBtn.disabled = !driverSelected; }
+        return driverSelected;
+    }
+
+    // -- Driver dropdown -------------------------------------------
+
+    function populateDrivers(drivers) {
+        var select = document.getElementById("hlaDriverSelect");
+        if (!select) { return; }
+
+        // Sort by name
+        drivers.sort(function (a, b) {
+            var na = ((a.firstName || "") + " " + (a.lastName || "")).trim().toLowerCase();
+            var nb = ((b.firstName || "") + " " + (b.lastName || "")).trim().toLowerCase();
+            if (na < nb) return -1;
+            if (na > nb) return 1;
+            return 0;
+        });
+
+        // Build map
+        _driverMap = {};
+        for (var i = 0; i < drivers.length; i++) {
+            _driverMap[drivers[i].id] = drivers[i];
+        }
+
+        // Populate dropdown
+        select.innerHTML = '<option value="">-- Select Driver (' + drivers.length + ') --</option>';
+        for (var j = 0; j < drivers.length; j++) {
+            var d = drivers[j];
+            var name = ((d.firstName || "") + " " + (d.lastName || "")).trim() || d.name || d.id;
+            var opt = document.createElement("option");
+            opt.value = d.id;
+            opt.textContent = name;
+            select.appendChild(opt);
+        }
+    }
+
+    // -- Search / Results ------------------------------------------
+
+    function performSearch() {
+        var driverSelect = document.getElementById("hlaDriverSelect");
+        var fromInput = document.getElementById("hlaFromDate");
+        var toInput = document.getElementById("hlaToDate");
+
+        if (!driverSelect || !fromInput || !toInput) { return; }
+
+        var driverId = driverSelect.value;
+        var fromDate = fromInput.value + "T00:00:00.000Z";
+        var toDate = toInput.value + "T23:59:59.999Z";
+
+        if (!driverId) { return; }
+
+        // Hide empty state, show table
+        var emptyState = document.getElementById("hlaEmptyState");
+        if (emptyState) { emptyState.style.display = "none"; }
+
+        showLoading("Fetching HOS log data\u2026");
+
+        HLA.AuditService.fetchAuditData(_api, driverId, fromDate, toDate)
+            .then(function (data) {
+                var userMap = HLA.DataProcessor.buildUserMap(data.users);
+                var rows = HLA.DataProcessor.buildAuditRows(data.logs, userMap);
+
+                // Show results
+                var tableWrap = document.querySelector("#hlaContainer .hla-table-wrap");
+                var resultsHeader = document.getElementById("hlaResultsHeader");
+                if (tableWrap) { tableWrap.setAttribute("style", "display: block;"); }
+                if (resultsHeader) { resultsHeader.style.display = "flex"; }
+
+                HLA.AuditTable.render(rows);
+                hideLoading();
+            })
+            .catch(function (err) {
+                showError("Failed to fetch HOS data: " + (err.message || err));
+                console.error("HLA fetch error:", err);
+            });
+    }
+
+    // -- Event binding ---------------------------------------------
+
+    function bindEvents() {
+        var searchBtn = document.getElementById("hlaSearchBtn");
+        var fromInput = document.getElementById("hlaFromDate");
+        var toInput = document.getElementById("hlaToDate");
+        var driverSelect = document.getElementById("hlaDriverSelect");
+        var csvBtn = document.getElementById("hlaCsvBtn");
+
+        if (searchBtn) {
+            searchBtn.addEventListener("click", function () {
+                if (validateDateRange()) {
+                    performSearch();
+                }
+            });
+        }
+
+        if (fromInput) { fromInput.addEventListener("change", function () { validateDateRange(); }); }
+        if (toInput) { toInput.addEventListener("change", function () { validateDateRange(); }); }
+        if (driverSelect) { driverSelect.addEventListener("change", function () { validateDateRange(); }); }
+
+        if (csvBtn) {
+            csvBtn.addEventListener("click", function () {
+                HLA.AuditTable.exportCSV();
+            });
+        }
+
+        HLA.AuditTable.bindSort();
+    }
+
+    // -- Mock data for standalone preview --------------------------
+
+    function buildMockApi() {
+        var now = new Date();
+        var hoursAgo = function (h) { return new Date(now.getTime() - h * 3600000).toISOString(); };
+
+        var mockDrivers = [
+            { id: "u1", firstName: "John", lastName: "Smith", name: "jsmith", isDriver: true },
+            { id: "u2", firstName: "Jane", lastName: "Doe", name: "jdoe", isDriver: true },
+            { id: "u3", firstName: "Mike", lastName: "Johnson", name: "mjohnson", isDriver: true },
+            { id: "u4", firstName: "Sarah", lastName: "Williams", name: "swilliams", isDriver: true },
+            { id: "u5", firstName: "Admin", lastName: "User", name: "admin" }
+        ];
+
+        var mockLogs = [
+            // Active original record
+            { id: "log1", state: 1, status: "D", dateTime: hoursAgo(48), driver: {id: "u1"}, origin: "Automatic" },
+            // Edit of log1 — changed from Driving to On Duty
+            { id: "log2", state: 2, status: "ON", dateTime: hoursAgo(48), editDateTime: hoursAgo(24),
+              parentId: {id: "log1"}, driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
+              annotations: [{comment: "Driver was at dock, not driving"}], origin: "Manual" },
+            // Another active record
+            { id: "log3", state: 1, status: "ON", dateTime: hoursAgo(72), driver: {id: "u1"}, origin: "Automatic" },
+            // Change requested for log3
+            { id: "log4", state: 3, status: "Off", dateTime: hoursAgo(72), editDateTime: hoursAgo(36),
+              parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
+              annotations: [{comment: "Was off duty, system logged incorrectly"}], origin: "Manual" },
+            // Rejected edit
+            { id: "log5", state: 4, status: "SB", dateTime: hoursAgo(60), editDateTime: hoursAgo(12),
+              parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
+              annotations: [{comment: "No evidence of sleeper berth usage"}], origin: "Manual" },
+            // Another edit chain for driver u2
+            { id: "log6", state: 1, status: "Off", dateTime: hoursAgo(30), driver: {id: "u2"}, origin: "Automatic" },
+            { id: "log7", state: 2, status: "ON", dateTime: hoursAgo(30), editDateTime: hoursAgo(10),
+              parentId: {id: "log6"}, driver: {id: "u2"}, editRequestedByUser: {id: "u5"},
+              annotations: [{comment: "Pre-trip inspection"}, {comment: "Confirmed by dispatch"}], origin: "Manual" },
+            // Edit with no parent
+            { id: "log8", state: 2, status: "D", dateTime: hoursAgo(20), editDateTime: hoursAgo(5),
+              driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
+              annotations: [], origin: "Manual" }
+        ];
+
+        return {
+            multiCall: function (calls, success, failure) {
+                var results = calls.map(function (call) {
+                    var typeName = call[1].typeName;
+                    var search = call[1].search || {};
+                    switch (typeName) {
+                        case "User":
+                            if (search.isDriver) {
+                                return mockDrivers.filter(function(d) { return d.isDriver; });
+                            }
+                            return mockDrivers;
+                        case "DutyStatusLog":
+                            // Filter logs by driver if specified
+                            var driverId = search.userSearch ? search.userSearch.id : null;
+                            if (driverId) {
+                                return mockLogs.filter(function (l) {
+                                    return l.driver && l.driver.id === driverId;
+                                });
+                            }
+                            return mockLogs;
+                        default:
+                            return [];
+                    }
+                });
+                setTimeout(function () { success(results); }, 300);
+            }
+        };
+    }
+
+    // -- Lifecycle -------------------------------------------------
+
+    return {
+        initialize: function (api, page, callback) {
+            _api = api;
+            _page = page;
+
+            setDefaultDates();
+            bindEvents();
+
+            showLoading("Loading drivers\u2026");
+            HLA.AuditService.loadDrivers(_api)
+                .then(function (drivers) {
+                    populateDrivers(drivers);
+                    hideLoading();
+                    validateDateRange();
+                })
+                .catch(function (err) {
+                    showError("Failed to load drivers: " + (err.message || err));
+                    console.error("HLA driver load error:", err);
+                });
+
+            if (callback) { callback(); }
+        },
+
+        focus: function (api, page) {
+            _api = api;
+            _page = page;
+            var container = document.getElementById("hlaContainer");
+            if (container) { container.style.display = "block"; }
+        },
+
+        blur: function () {
+            var container = document.getElementById("hlaContainer");
+            if (container) { container.style.display = "none"; }
+        },
+
+        _initStandalone: function () {
+            _api = buildMockApi();
+            _page = {};
+            setDefaultDates();
+            bindEvents();
+
+            showLoading("Loading drivers\u2026");
+            HLA.AuditService.loadDrivers(_api)
+                .then(function (drivers) {
+                    populateDrivers(drivers);
+                    hideLoading();
+                    validateDateRange();
+                })
+                .catch(function (err) {
+                    showError("Failed to load drivers: " + (err.message || err));
+                });
+        }
+    };
+};
+
+// Auto-start in standalone mode (no MyGeotab host)
+(function () {
+    if (typeof document === "undefined") { return; }
+
+    function tryStandaloneInit() {
+        if (typeof geotab.addin.hos_log_edit_audit === "function") {
+            var addin = geotab.addin.hos_log_edit_audit();
+            addin._initStandalone();
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () { setTimeout(tryStandaloneInit, 2000); });
+    } else {
+        setTimeout(tryStandaloneInit, 2000);
+    }
+})();
+
+</script>
+</body>
+</html>
