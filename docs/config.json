@@ -8,8 +8,7 @@
             "path": "ActivityLink/",
             "menuName": {
                 "en": "HOS Log Edit Audit"
-            },
-            "icon": "https://niteshmistry-sig.github.io/addin-hos-audit/images/icon.svg"
+            }
         }
     ],
     "isSigned": false
