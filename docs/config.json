@@ -1,15 +1,16 @@
 {
-    "name": "HOS Log Edit Audit",
-    "supportEmail": "support@example.com",
-    "version": "1.0",
-    "items": [
-        {
-            "url": "https://niteshmistry-sig.github.io/addin-hos-audit/index.html",
-            "path": "ActivityLink/",
-            "menuName": {
-                "en": "HOS Log Edit Audit"
-            }
-        }
-    ],
-    "isSigned": false
+  "name": "HOS Log Edit Audit",
+  "supportEmail": "support@example.com",
+  "version": "1.0",
+  "items": [
+    {
+      "url": "https://niteshmistry-sig.github.io/addin-hos-audit/index.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "HOS Log Edit Audit"
+      },
+      "svgIcon": "https://niteshmistry-sig.github.io/addin-hos-audit/images/icon.svg"
+    }
+  ],
+  "isSigned": false
 }

@@ -1,0 +1,309 @@
+/* ===============================================================
+   HOS Log Edit Audit — Styles
+   All rules scoped under #hla-root to avoid MyGeotab conflicts.
+   =============================================================== */
+
+/* -- Root -- */
+#hla-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #333;
+  background: #fff;
+}
+
+#hla-root *, #hla-root *::before, #hla-root *::after {
+  box-sizing: border-box;
+}
+
+/* -- Toolbar -- */
+#hla-root .hla-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #f5f6f8;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+#hla-root .hla-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#hla-root .hla-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #666;
+}
+
+#hla-root .hla-select,
+#hla-root .hla-input {
+  font-family: inherit;
+  font-size: 13px;
+  color: #333;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  min-width: 160px;
+}
+
+#hla-root .hla-select {
+  min-width: 240px;
+}
+
+#hla-root .hla-select:focus,
+#hla-root .hla-input:focus {
+  outline: none;
+  border-color: #4a90d9;
+  box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.2);
+}
+
+#hla-root .hla-date-error {
+  color: #c62828;
+  font-size: 12px;
+  font-weight: 500;
+  width: 100%;
+}
+
+/* -- Buttons -- */
+#hla-root .hla-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  height: 34px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+#hla-root .hla-btn-primary {
+  background: #4a90d9;
+  color: #fff;
+}
+
+#hla-root .hla-btn-primary:hover {
+  background: #3a7bc8;
+}
+
+#hla-root .hla-btn-primary:active {
+  background: #2e66a8;
+}
+
+#hla-root .hla-btn-primary:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+#hla-root .hla-btn-small {
+  font-size: 12px;
+  height: 28px;
+  padding: 0 12px;
+  background: #f5f6f8;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+#hla-root .hla-btn-small:hover {
+  background: #ebedf0;
+}
+
+/* -- Results Header -- */
+#hla-root .hla-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+#hla-root .hla-result-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* -- Content Area -- */
+#hla-root #hla-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+}
+
+/* -- Table -- */
+#hla-root .hla-table-wrap {
+  min-height: 0;
+  overflow: auto;
+}
+
+#hla-root .hla-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#hla-root .hla-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f5f6f8;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #666;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  white-space: nowrap;
+}
+
+#hla-root .hla-table thead th.hla-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+#hla-root .hla-table thead th.hla-sortable:hover {
+  background: #ebedf0;
+  color: #333;
+}
+
+#hla-root .hla-sort-arrow {
+  margin-left: 4px;
+  font-size: 10px;
+  color: #aaa;
+}
+
+#hla-root .hla-sort-arrow.active {
+  color: #4a90d9;
+}
+
+#hla-root .hla-table tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  color: #333;
+  vertical-align: middle;
+}
+
+#hla-root .hla-table tbody td.hla-cell-annotations {
+  white-space: normal;
+  max-width: 250px;
+  word-wrap: break-word;
+}
+
+#hla-root .hla-table tbody tr:hover {
+  background: #f0f5ff;
+}
+
+/* -- Badges / Pills -- */
+#hla-root .hla-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Duty status badges */
+#hla-root .hla-badge-off      { background: #e8f5e9; color: #2e7d32; }
+#hla-root .hla-badge-on       { background: #fff3e0; color: #e65100; }
+#hla-root .hla-badge-driving  { background: #fce4ec; color: #c62828; }
+#hla-root .hla-badge-sleeper  { background: #e3f2fd; color: #1565c0; }
+#hla-root .hla-badge-pc       { background: #f3e5f5; color: #6a1b9a; }
+#hla-root .hla-badge-ym       { background: #e0f2f1; color: #00695c; }
+#hla-root .hla-badge-default  { background: #f5f6f8; color: #666; }
+
+/* Record state badges */
+#hla-root .hla-badge-changed   { background: #fff3e0; color: #e65100; }
+#hla-root .hla-badge-requested { background: #e3f2fd; color: #1565c0; }
+#hla-root .hla-badge-rejected  { background: #fce4ec; color: #c62828; }
+
+/* -- Loading Overlay -- */
+#hla-root #hla-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+}
+
+#hla-root .hla-spinner-wrap {
+  text-align: center;
+}
+
+#hla-root .hla-spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #ddd;
+  border-top-color: #4a90d9;
+  border-radius: 50%;
+  animation: hla-spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes hla-spin {
+  to { transform: rotate(360deg); }
+}
+
+#hla-root #hla-loading p {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+/* -- Empty State -- */
+#hla-root #hla-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+}
+
+#hla-root #hla-empty p {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+}
+
+/* -- Error Banner -- */
+#hla-root .hla-error {
+  background: #fce4ec;
+  color: #c62828;
+  padding: 10px 16px;
+  font-size: 13px;
+  border-top: 1px solid #f8bbd0;
+}
+
+/* -- Responsive -- */
+@media (max-width: 800px) {
+  #hla-root .hla-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #hla-root .hla-select,
+  #hla-root .hla-input {
+    min-width: auto;
+    width: 100%;
+  }
+}
