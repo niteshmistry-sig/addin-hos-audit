@@ -235,6 +235,10 @@
 #hla-root .hla-badge-requested { background: #e3f2fd; color: #1565c0; }
 #hla-root .hla-badge-rejected  { background: #fce4ec; color: #c62828; }
 
+/* Edit type badges */
+#hla-root .hla-badge-edit { background: #fff3e0; color: #e65100; }
+#hla-root .hla-badge-add  { background: #e8f5e9; color: #2e7d32; }
+
 /* -- Loading Overlay -- */
 #hla-root #hla-loading {
   position: absolute;

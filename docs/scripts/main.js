@@ -226,12 +226,73 @@ geotab.addin.hosLogEditAudit = function () {
     return map;
   }
 
-  function buildAuditRows(logs, userMap) {
+  function buildAuditRows(logs, userMap, audits) {
     var logById = {};
     var i, log;
     for (i = 0; i < logs.length; i++) {
       log = logs[i];
       if (log.id) logById[log.id] = log;
+    }
+
+    // Build a username→user lookup so we can resolve Audit.userName
+    var userByName = {};
+    var uid;
+    for (uid in userMap) {
+      if (userMap[uid].name) {
+        userByName[userMap[uid].name.toLowerCase()] = userMap[uid];
+      }
+    }
+
+    // Index audits by approximate dateTime (within 60s) for cross-reference
+    var auditIndex = [];
+    if (audits && audits.length > 0) {
+      for (i = 0; i < audits.length; i++) {
+        auditIndex.push({
+          dateTime: audits[i].dateTime ? new Date(audits[i].dateTime).getTime() : 0,
+          userName: audits[i].userName || "",
+          name: audits[i].name || "",
+          comment: audits[i].comment || ""
+        });
+      }
+    }
+
+    function resolveEditorName(log) {
+      // 1. Try editRequestedByUser on the log itself
+      if (log.editRequestedByUser && log.editRequestedByUser.id) {
+        var editor = userMap[log.editRequestedByUser.id];
+        if (editor) {
+          var fullName = ((editor.firstName || "") + " " + (editor.lastName || "")).trim();
+          var username = editor.name || "";
+          if (fullName && username) return fullName + " (" + username + ")";
+          return fullName || username || "Unknown";
+        }
+      }
+
+      // 2. Fall back to matching Audit records by dateTime proximity
+      var editTime = new Date(log.editDateTime || log.dateTime || "").getTime();
+      if (editTime && auditIndex.length > 0) {
+        var bestMatch = null;
+        var bestDelta = Infinity;
+        for (var a = 0; a < auditIndex.length; a++) {
+          var delta = Math.abs(auditIndex[a].dateTime - editTime);
+          if (delta < bestDelta && delta < 60000) { // within 60 seconds
+            bestDelta = delta;
+            bestMatch = auditIndex[a];
+          }
+        }
+        if (bestMatch && bestMatch.userName) {
+          var resolved = userByName[bestMatch.userName.toLowerCase()];
+          if (resolved) {
+            var fn = ((resolved.firstName || "") + " " + (resolved.lastName || "")).trim();
+            var un = resolved.name || "";
+            if (fn && un) return fn + " (" + un + ")";
+            return fn || un || bestMatch.userName;
+          }
+          return bestMatch.userName;
+        }
+      }
+
+      return "System";
     }
 
     var rows = [];
@@ -249,19 +310,7 @@ geotab.addin.hosLogEditAudit = function () {
         originalStatus = formatStatus(logById[log.parentId.id].status);
       }
 
-      var editedByName = "System";
-      if (log.editRequestedByUser && log.editRequestedByUser.id) {
-        var editor = userMap[log.editRequestedByUser.id];
-        if (editor) {
-          var fullName = ((editor.firstName || "") + " " + (editor.lastName || "")).trim();
-          var username = editor.name || "";
-          if (fullName && username) {
-            editedByName = fullName + " (" + username + ")";
-          } else {
-            editedByName = fullName || username || "Unknown";
-          }
-        }
-      }
+      var editedByName = resolveEditorName(log);
 
       var annotations = "\u2014";
       if (log.annotations && log.annotations.length > 0) {
@@ -280,11 +329,15 @@ geotab.addin.hosLogEditAudit = function () {
         }
       }
 
+      // Determine edit type: if log has a parentId it's a modification, otherwise an insertion
+      var editType = (log.parentId && log.parentId.id) ? "Edit" : "Add";
+
       rows.push({
         punchDateTime: log.dateTime || "",
         driverName: driverName,
         editDateTime: log.editDateTime || log.dateTime || "",
         editedByName: editedByName,
+        editType: editType,
         originalStatus: originalStatus,
         newStatus: formatStatus(log.status),
         recordState: EventRecordStatusLabels[log.state] || "Unknown",
@@ -330,14 +383,27 @@ geotab.addin.hosLogEditAudit = function () {
         },
         resultsLimit: 25000
       }],
-      ["Get", { typeName: "User", resultsLimit: 50000 }]
+      ["Get", { typeName: "User", resultsLimit: 50000 }],
+      ["Get", {
+        typeName: "Audit",
+        search: { name: "Edit HOS log", fromDate: fromDate, toDate: toDate },
+        resultsLimit: 50000
+      }],
+      ["Get", {
+        typeName: "Audit",
+        search: { name: "Add HOS log", fromDate: fromDate, toDate: toDate },
+        resultsLimit: 50000
+      }]
     ], function (results) {
       if (abortController && abortController.signal.aborted) return;
 
       var logs = results[0] || [];
       var users = results[1] || [];
+      var editAudits = results[2] || [];
+      var addAudits = results[3] || [];
       var userMap = buildUserMap(users);
-      auditRows = buildAuditRows(logs, userMap);
+      var audits = editAudits.concat(addAudits);
+      auditRows = buildAuditRows(logs, userMap, audits);
 
       els.resultsHeader.style.display = "flex";
       renderTable();
@@ -362,7 +428,8 @@ geotab.addin.hosLogEditAudit = function () {
       '<th class="hla-sortable" data-sort="punchDateTime">Punch Date/Time ' + sortArrow("punchDateTime") + "</th>" +
       '<th class="hla-sortable" data-sort="driverName">Driver ' + sortArrow("driverName") + "</th>" +
       '<th class="hla-sortable" data-sort="editDateTime">Edit Date/Time ' + sortArrow("editDateTime") + "</th>" +
-      '<th class="hla-sortable" data-sort="editedByName">Edited By ' + sortArrow("editedByName") + "</th>" +
+      '<th class="hla-sortable" data-sort="editedByName">Modified By ' + sortArrow("editedByName") + "</th>" +
+      '<th class="hla-sortable" data-sort="editType">Type ' + sortArrow("editType") + "</th>" +
       '<th class="hla-sortable" data-sort="originalStatus">Original Status ' + sortArrow("originalStatus") + "</th>" +
       '<th class="hla-sortable" data-sort="newStatus">New Status ' + sortArrow("newStatus") + "</th>" +
       '<th class="hla-sortable" data-sort="recordState">Record State ' + sortArrow("recordState") + "</th>" +
@@ -374,18 +441,20 @@ geotab.addin.hosLogEditAudit = function () {
     tbody.innerHTML = "";
 
     if (rows.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#999;">No HOS log edits found for this driver and date range.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:24px;color:#999;">No HOS log edits found for this driver and date range.</td></tr>';
       return;
     }
 
     var html = "";
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
+      var typeBadge = r.editType === "Add" ? "hla-badge-add" : "hla-badge-edit";
       html += '<tr>';
       html += '<td>' + escHtml(formatDateTime(r.punchDateTime)) + '</td>';
       html += '<td>' + escHtml(r.driverName) + '</td>';
       html += '<td>' + escHtml(formatDateTime(r.editDateTime)) + '</td>';
       html += '<td>' + escHtml(r.editedByName) + '</td>';
+      html += '<td><span class="hla-badge ' + typeBadge + '">' + escHtml(r.editType) + '</span></td>';
       html += '<td><span class="hla-badge ' + dutyBadgeClass(r.originalStatus) + '">' + escHtml(r.originalStatus) + '</span></td>';
       html += '<td><span class="hla-badge ' + dutyBadgeClass(r.newStatus) + '">' + escHtml(r.newStatus) + '</span></td>';
       html += '<td><span class="hla-badge ' + stateBadgeClass(r.recordStateCode) + '">' + escHtml(r.recordState) + '</span></td>';
@@ -402,7 +471,7 @@ geotab.addin.hosLogEditAudit = function () {
   function exportCSV() {
     if (auditRows.length === 0) return;
 
-    var headers = ["Punch Date/Time", "Driver", "Edit Date/Time", "Edited By",
+    var headers = ["Punch Date/Time", "Driver", "Edit Date/Time", "Modified By", "Type",
                    "Original Status", "New Status", "Record State", "Annotations", "Origin"];
 
     var csvRows = [headers.join(",")];
@@ -413,6 +482,7 @@ geotab.addin.hosLogEditAudit = function () {
         '"' + (r.driverName || "").replace(/"/g, '""') + '"',
         '"' + formatDateTime(r.editDateTime).replace(/"/g, '""') + '"',
         '"' + (r.editedByName || "").replace(/"/g, '""') + '"',
+        '"' + (r.editType || "").replace(/"/g, '""') + '"',
         '"' + (r.originalStatus || "").replace(/"/g, '""') + '"',
         '"' + (r.newStatus || "").replace(/"/g, '""') + '"',
         '"' + (r.recordState || "").replace(/"/g, '""') + '"',
