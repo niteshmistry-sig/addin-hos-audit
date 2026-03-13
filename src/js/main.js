@@ -232,28 +232,28 @@ geotab.addin.hos_log_edit_audit = function () {
 
         var mockLogs = [
             // Active original record
-            { id: "log1", state: 1, status: "D", dateTime: hoursAgo(48), driver: {id: "u1"}, origin: "Automatic" },
+            { id: "log1", state: "Active", status: "D", dateTime: hoursAgo(48), driver: {id: "u1"}, origin: "Automatic" },
             // Edit of log1 — changed from Driving to On Duty
-            { id: "log2", state: 2, status: "ON", dateTime: hoursAgo(48), editDateTime: hoursAgo(24),
+            { id: "log2", state: "Inactive", status: "ON", dateTime: hoursAgo(48), editDateTime: hoursAgo(24),
               parentId: {id: "log1"}, driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
               annotations: [{comment: "Driver was at dock, not driving"}], origin: "Manual" },
             // Another active record
-            { id: "log3", state: 1, status: "ON", dateTime: hoursAgo(72), driver: {id: "u1"}, origin: "Automatic" },
+            { id: "log3", state: "Active", status: "ON", dateTime: hoursAgo(72), driver: {id: "u1"}, origin: "Automatic" },
             // Change requested for log3
-            { id: "log4", state: 3, status: "Off", dateTime: hoursAgo(72), editDateTime: hoursAgo(36),
+            { id: "log4", state: "Requested", status: "Off", dateTime: hoursAgo(72), editDateTime: hoursAgo(36),
               parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
               annotations: [{comment: "Was off duty, system logged incorrectly"}], origin: "Manual" },
             // Rejected edit
-            { id: "log5", state: 4, status: "SB", dateTime: hoursAgo(60), editDateTime: hoursAgo(12),
+            { id: "log5", state: "Rejected", status: "SB", dateTime: hoursAgo(60), editDateTime: hoursAgo(12),
               parentId: {id: "log3"}, driver: {id: "u1"}, editRequestedByUser: {id: "u1"},
               annotations: [{comment: "No evidence of sleeper berth usage"}], origin: "Manual" },
             // Another edit chain for driver u2
-            { id: "log6", state: 1, status: "Off", dateTime: hoursAgo(30), driver: {id: "u2"}, origin: "Automatic" },
-            { id: "log7", state: 2, status: "ON", dateTime: hoursAgo(30), editDateTime: hoursAgo(10),
+            { id: "log6", state: "Active", status: "Off", dateTime: hoursAgo(30), driver: {id: "u2"}, origin: "Automatic" },
+            { id: "log7", state: "Inactive", status: "ON", dateTime: hoursAgo(30), editDateTime: hoursAgo(10),
               parentId: {id: "log6"}, driver: {id: "u2"}, editRequestedByUser: {id: "u5"},
               annotations: [{comment: "Pre-trip inspection"}, {comment: "Confirmed by dispatch"}], origin: "Manual" },
             // Edit with no parent
-            { id: "log8", state: 2, status: "D", dateTime: hoursAgo(20), editDateTime: hoursAgo(5),
+            { id: "log8", state: "Inactive", status: "D", dateTime: hoursAgo(20), editDateTime: hoursAgo(5),
               driver: {id: "u1"}, editRequestedByUser: {id: "u5"},
               annotations: [], origin: "Manual" }
         ];

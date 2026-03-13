@@ -7,10 +7,10 @@ HLA.Constants = (function () {
     "use strict";
 
     var EventRecordStatus = {
-        ACTIVE: 1,
-        INACTIVE_CHANGED: 2,
-        CHANGE_REQUESTED: 3,
-        CHANGE_REJECTED: 4
+        ACTIVE: "Active",
+        INACTIVE_CHANGED: "Inactive",
+        CHANGE_REQUESTED: "Requested",
+        CHANGE_REJECTED: "Rejected"
     };
 
     var EventRecordStatusLabels = {};
