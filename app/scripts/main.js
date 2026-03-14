@@ -18,6 +18,7 @@ geotab.addin.hosLogEditAudit = function () {
   var auditRows = [];
   var sortCol = "editDateTime";
   var sortAsc = false;
+  var selectedModifiers = {}; // name → true/false; empty = show all
 
   // ── DOM refs (cached in initialize) ──
   var els = {};
@@ -406,6 +407,7 @@ geotab.addin.hosLogEditAudit = function () {
       auditRows = buildAuditRows(logs, userMap, audits);
 
       els.resultsHeader.style.display = "flex";
+      populateModifierFilter();
       renderTable();
       showLoading(false);
     }, function (err) {
@@ -416,10 +418,98 @@ geotab.addin.hosLogEditAudit = function () {
   }
 
   // ══════════════════════════════════════════
+  //  Modifier Filter
+  // ══════════════════════════════════════════
+  function getUniqueModifiers() {
+    var names = {};
+    for (var i = 0; i < auditRows.length; i++) {
+      var name = auditRows[i].editedByName || "Unknown";
+      names[name] = true;
+    }
+    return Object.keys(names).sort(function (a, b) {
+      return a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0;
+    });
+  }
+
+  function populateModifierFilter() {
+    var names = getUniqueModifiers();
+    selectedModifiers = {};
+    for (var i = 0; i < names.length; i++) {
+      selectedModifiers[names[i]] = true;
+    }
+    rebuildModifierMenu();
+    els.modifierFilter.style.display = names.length > 0 ? "" : "none";
+  }
+
+  function rebuildModifierMenu() {
+    var names = getUniqueModifiers();
+    var allSelected = true;
+    var noneSelected = true;
+    for (var i = 0; i < names.length; i++) {
+      if (!selectedModifiers[names[i]]) allSelected = false;
+      else noneSelected = false;
+    }
+
+    var html = '<label class="hla-dropdown-item hla-dropdown-item-all">' +
+      '<input type="checkbox" id="hla-mod-select-all" ' + (allSelected ? "checked" : "") + '> <strong>Select All</strong></label>';
+    for (var j = 0; j < names.length; j++) {
+      var checked = selectedModifiers[names[j]] ? "checked" : "";
+      html += '<label class="hla-dropdown-item">' +
+        '<input type="checkbox" data-modifier="' + escHtml(names[j]) + '" ' + checked + '> ' + escHtml(names[j]) + '</label>';
+    }
+    els.modifierMenu.innerHTML = html;
+    updateModifierToggleLabel(names, allSelected);
+  }
+
+  function updateModifierToggleLabel(names, allSelected) {
+    if (!names) names = getUniqueModifiers();
+    if (allSelected === undefined) {
+      allSelected = true;
+      for (var i = 0; i < names.length; i++) {
+        if (!selectedModifiers[names[i]]) { allSelected = false; break; }
+      }
+    }
+    var count = 0;
+    for (var k = 0; k < names.length; k++) {
+      if (selectedModifiers[names[k]]) count++;
+    }
+    if (allSelected || count === names.length) {
+      els.modifierToggle.innerHTML = 'All <span class="hla-caret">&#x25BC;</span>';
+    } else if (count === 0) {
+      els.modifierToggle.innerHTML = 'None <span class="hla-caret">&#x25BC;</span>';
+    } else if (count === 1) {
+      for (var m = 0; m < names.length; m++) {
+        if (selectedModifiers[names[m]]) {
+          els.modifierToggle.innerHTML = escHtml(names[m]) + ' <span class="hla-caret">&#x25BC;</span>';
+          break;
+        }
+      }
+    } else {
+      els.modifierToggle.innerHTML = count + ' selected <span class="hla-caret">&#x25BC;</span>';
+    }
+  }
+
+  function getFilteredRows() {
+    var names = getUniqueModifiers();
+    var allSelected = true;
+    for (var i = 0; i < names.length; i++) {
+      if (!selectedModifiers[names[i]]) { allSelected = false; break; }
+    }
+    if (allSelected) return auditRows;
+
+    var filtered = [];
+    for (var j = 0; j < auditRows.length; j++) {
+      var name = auditRows[j].editedByName || "Unknown";
+      if (selectedModifiers[name]) filtered.push(auditRows[j]);
+    }
+    return filtered;
+  }
+
+  // ══════════════════════════════════════════
   //  Rendering
   // ══════════════════════════════════════════
   function renderTable() {
-    var rows = auditRows;
+    var rows = getFilteredRows();
     els.resultCount.textContent = rows.length + " edit" + (rows.length !== 1 ? "s" : "") + " found";
 
     // Update headers with sort arrows
@@ -469,14 +559,15 @@ geotab.addin.hosLogEditAudit = function () {
   //  CSV Export
   // ══════════════════════════════════════════
   function exportCSV() {
-    if (auditRows.length === 0) return;
+    var exportRows = getFilteredRows();
+    if (exportRows.length === 0) return;
 
     var headers = ["Punch Date/Time", "Driver", "Edit Date/Time", "Modified By", "Type",
                    "Original Status", "New Status", "Record State", "Annotations", "Origin"];
 
     var csvRows = [headers.join(",")];
-    for (var i = 0; i < auditRows.length; i++) {
-      var r = auditRows[i];
+    for (var i = 0; i < exportRows.length; i++) {
+      var r = exportRows[i];
       var row = [
         '"' + formatDateTime(r.punchDateTime).replace(/"/g, '""') + '"',
         '"' + (r.driverName || "").replace(/"/g, '""') + '"',
@@ -520,6 +611,47 @@ geotab.addin.hosLogEditAudit = function () {
 
     // CSV export
     els.csvBtn.addEventListener("click", function () { exportCSV(); });
+
+    // Modifier filter dropdown toggle
+    els.modifierToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      els.modifierDropdown.classList.toggle("hla-dropdown-open");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!els.modifierDropdown.contains(e.target)) {
+        els.modifierDropdown.classList.remove("hla-dropdown-open");
+      }
+    });
+
+    // Modifier filter checkbox changes (delegation)
+    els.modifierMenu.addEventListener("change", function (e) {
+      var checkbox = e.target;
+      if (checkbox.id === "hla-mod-select-all") {
+        var names = getUniqueModifiers();
+        for (var i = 0; i < names.length; i++) {
+          selectedModifiers[names[i]] = checkbox.checked;
+        }
+        rebuildModifierMenu();
+      } else {
+        var modifier = checkbox.getAttribute("data-modifier");
+        if (modifier) {
+          selectedModifiers[modifier] = checkbox.checked;
+          var selectAll = els.modifierMenu.querySelector("#hla-mod-select-all");
+          if (selectAll) {
+            var allChecked = true;
+            var names2 = getUniqueModifiers();
+            for (var j = 0; j < names2.length; j++) {
+              if (!selectedModifiers[names2[j]]) { allChecked = false; break; }
+            }
+            selectAll.checked = allChecked;
+          }
+          updateModifierToggleLabel();
+        }
+      }
+      renderTable();
+    });
 
     // Table sorting (delegation)
     els.auditTable.addEventListener("click", function (e) {
@@ -569,6 +701,10 @@ geotab.addin.hosLogEditAudit = function () {
       els.csvBtn = document.getElementById("hla-csv-btn");
       els.auditTable = document.getElementById("hla-audit-table");
       els.tableBody = document.getElementById("hla-table-body");
+      els.modifierFilter = document.getElementById("hla-modifier-filter");
+      els.modifierDropdown = document.getElementById("hla-modifier-dropdown");
+      els.modifierToggle = document.getElementById("hla-modifier-toggle");
+      els.modifierMenu = document.getElementById("hla-modifier-menu");
 
       wireEvents();
       setDefaults();
